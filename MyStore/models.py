@@ -2,16 +2,11 @@ import uuid
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
-# Create your models here.
-"""
-User
-    - id 
-    - name
-    - email
-    - password
-    
-#################
+from PIL import Image
 
+# Create your models here.
+
+"""
 Product
     - id
     - name
@@ -31,4 +26,90 @@ Product
     
 
 """
+User = get_user_model()
+
+            
+class Category(models.Model):
+    name = models.CharField("اسم الفئة", max_length=25)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'فئة'
+        verbose_name_plural = 'الفئات'
+        
+class Product(models.Model):
+    name = models.CharField("اسم المنتج", max_length=50)
+    banner = models.ImageField("الصورة", upload_to="banners/")
+    description = models.TextField("الوصف", blank=True)
+    category = models.ForeignKey(Category, verbose_name="الفئة", on_delete=models.CASCADE)
+    colors = models.ManyToManyField('MyStore.Color', verbose_name='الالوان', related_name='products')
+    price = models.IntegerField("السعر")
+    stock = models.IntegerField("عدد القطع بالمخزن")
+    is_available = models.BooleanField("متوفر؟", default=True)
+    show_hide = models.BooleanField("اظهر هذا المنتج", default=True)
+    created = models.DateTimeField("تاريخ الانشاء", editable=False, auto_now_add=True)
+    updated = models.DateTimeField("تاريخ التحديث", editable=False, auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['-updated']
+        verbose_name = 'منتج'
+        verbose_name_plural = 'المنتجات'
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img = Image.open(self.banner.path)
+        if img.height > 500 or img.width > 500:
+            output_size = (500, 500)
+            img.thumbnail(output_size)
+            img.save(self.banner.path)
+            
+
+            
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE, related_name='product_image')
+    image = models.ImageField("صورة", upload_to='images/')
+
+    def __str__(self):
+        return self.product.title
+
+    class Meta:
+        verbose_name = 'صورة منتج'
+        verbose_name_plural = 'صور المنتج'
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img = Image.open(self.image.path)
+        if img.height > 500 or img.width > 500:
+            output_size = (500, 500)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
+       
+            
+class Color(models.Model):
+    name = models.CharField("اسم اللون", max_length=50)
+    color_code = models.CharField("رمز اللون (HEX)", max_length=12, help_text="ادخل اللون مثل: OxFF45B9EE")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'لون'
+        verbose_name_plural = 'الالوان'
+
+    @property
+    def modify_color_code(self):
+        self.color_code = self.color_code.lstrip('#')
+        self.color_code = f"0xFF{self.color_code.upper()}"
+        return self.color_code
+
+
 

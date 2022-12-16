@@ -1,10 +1,9 @@
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from ninja import Router
-
 from djangoProject.utils.schemas import MessageOut
 from MyStore.schema import FourOFourOut 
 from djangoProject import status
-from .authorization import create_token_for_user, AuthBearer
+from .authorization import create_token_for_user
 from .schemas import AccountIn, AuthOut, SigninIn
 
 
