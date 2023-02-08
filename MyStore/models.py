@@ -23,7 +23,22 @@ Product
     - images (fk)
     
 ###################
+Category
+    - id
+    - name
     
+###################
+ProductImage
+    - product
+    - image
+    
+###################
+Colors
+    - id
+    - name
+    -color-code
+    
+
 
 """
 User = get_user_model()
@@ -111,5 +126,33 @@ class Color(models.Model):
         self.color_code = f"0xFF{self.color_code.upper()}"
         return self.color_code
 
+class Item(models.Model):
+    user = models.ForeignKey(to=User, verbose_name='user', related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, verbose_name='product', on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    is_ordered = models.BooleanField('is ordered', default=False)
 
+    def __str__(self):
+        return f''
 
+class Cart(models.Model):
+    user = models.ForeignKey(to=User, verbose_name='user', related_name='carts', on_delete=models.CASCADE)
+    items = models.ManyToManyField('MyStore.Item', verbose_name='items', related_name='carts')
+    is_ordered = models.BooleanField('is ordered', default=False)
+    total = models.IntegerField('total', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.name}: د.ع {self.total}"
+
+    class Meta:
+        verbose_name = 'عربة'
+        verbose_name_plural = 'العربات'
+
+    @property
+    def cart_total(self):
+        return sum(i.product.price * i.quantity for i in self.items.all())
+    
+class Wishlist(models.Model):
+    user = models.ForeignKey(to=User, verbose_name='user', related_name='favs', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, verbose_name='product', related_name='favs', on_delete=models.CASCADE)
+    is_fav = models.BooleanField('is favorite', default=False)

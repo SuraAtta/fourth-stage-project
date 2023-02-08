@@ -12,10 +12,10 @@ class ProductImageAdmin(admin.StackedInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    # def get_colors(self, obj):
-    #     return ", ".join([c.name for c in obj.colors.all()])
+    def get_colors(self, obj):
+        return ", ".join([c.name for c in obj.colors.all()])
 
-    # get_colors.__name__ = "الالوان"
+    get_colors.__name__ = "الالوان"
 
     inlines = [ProductImageAdmin]
     list_display = ["name", "category", "price","stock", "is_available", "show_hide", "created", "updated"]

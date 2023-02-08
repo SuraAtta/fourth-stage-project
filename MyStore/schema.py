@@ -48,3 +48,11 @@ class ItemCreate(Schema):
 
 class ItemOut(ItemSchema):
     id: int
+    
+class FavoriteProductIn(Schema):
+    product_id: int
+
+
+class FavoriteProductOut(Schema):
+    product: ProductSchema
+    is_fav: bool
