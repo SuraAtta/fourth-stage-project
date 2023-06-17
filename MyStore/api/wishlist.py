@@ -33,6 +33,7 @@ def view_wishlist(request):
     400: MessageOut,
     401: MessageOut
 })
+
 @check_pk
 def add_remove_favorite(request, fav_in: FavoriteProductIn):
     try:
@@ -48,6 +49,5 @@ def add_remove_favorite(request, fav_in: FavoriteProductIn):
         fav_prod.is_fav = True
         fav_prod.save()
     return 200, {'detail': 'Added to wishlist successfully'}
-
 
 

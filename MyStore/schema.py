@@ -8,6 +8,7 @@ class FourOFourOut(Schema):
 
 class CategorySchema(Schema):
     name : str
+    image : str
   
 
 class ColorSchema(Schema):
@@ -24,7 +25,7 @@ class ProductImageSchema(Schema):
   
 class ProductSchema(Schema):
     id: int
-    title: str
+    name: str
     banner: str
     description: str = None
     category: CategorySchema
@@ -56,3 +57,8 @@ class FavoriteProductIn(Schema):
 class FavoriteProductOut(Schema):
     product: ProductSchema
     is_fav: bool
+    
+
+class ColorLogoSchema(Schema):
+    color_code: str
+    image: str

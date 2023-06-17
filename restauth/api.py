@@ -1,7 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from ninja import Router
 from djangoProject.utils.schemas import MessageOut
-from MyStore.schema import FourOFourOut 
+from MyStore.schema import FourOFourOut
 from djangoProject import status
 from .authorization import create_token_for_user
 from .schemas import AccountIn, AuthOut, SigninIn
@@ -25,9 +25,9 @@ def signup(request, account_in: AccountIn):
     except User.DoesNotExist:
         new_user = User.objects.create_user(
             first_name=account_in.first_name,
-            last_name=account_in.last_name,
             email=account_in.email,
             password=account_in.password1,
+            profile_pic=account_in.profile_pic
         )
 
         token = create_token_for_user(new_user)
@@ -48,7 +48,6 @@ def signup(request, account_in: AccountIn):
 def signin(request, signin_in: SigninIn):
     try:
         user = User.objects.get(email=signin_in.email)
-        # user = authenticate(email=signin_in.email, password=signin_in.password)
 
     except User.DoesNotExist:
         user = None

@@ -5,7 +5,7 @@
 .form-row {
     overflow: hidden;
     padding: 10px;
-    font-size: 13px;
+    font-size: 20px;
     border-bottom: 1px solid var(--hairline-color);
 }
 
@@ -27,7 +27,7 @@ form .form-row p {
 label {
     font-weight: normal;
     color: var(--body-quiet-color);
-    font-size: 13px;
+    font-size: 20px;
 }
 
 .required label, label.required {

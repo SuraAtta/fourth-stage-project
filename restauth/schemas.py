@@ -3,11 +3,11 @@ from pydantic import EmailStr, Field
 
 
 class AccountIn(Schema):
-    username: str = Field(min_length=1)
+    first_name: str = Field(min_length=1)
     email: EmailStr
     password1: str = Field(min_length=8)
     password2: str = Field(min_length=8)
-
+    profile_pic: str = None
 
 
 class TokenOut(Schema):
@@ -16,8 +16,10 @@ class TokenOut(Schema):
 
 class AccountOut(Schema):
     id: int
-    username: str
+    first_name: str
+    last_name: str
     email: EmailStr
+    profile_pic: str = None
 
 
 class AuthOut(Schema):

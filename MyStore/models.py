@@ -46,6 +46,7 @@ User = get_user_model()
             
 class Category(models.Model):
     name = models.CharField("اسم الفئة", max_length=25)
+    image = models.ImageField("صورة")
 
     def __str__(self):
         return self.name
@@ -53,6 +54,18 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'فئة'
         verbose_name_plural = 'الفئات'
+        
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img = Image.open(self.image.path)
+        if img.height > 500 or img.width > 500:
+            output_size = (500, 500)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
+            
+            
         
 class Product(models.Model):
     name = models.CharField("اسم المنتج", max_length=50)
@@ -92,7 +105,7 @@ class ProductImage(models.Model):
     image = models.ImageField("صورة", upload_to='images/')
 
     def __str__(self):
-        return self.product.title
+        return self.product.name
 
     class Meta:
         verbose_name = 'صورة منتج'
@@ -156,3 +169,31 @@ class Wishlist(models.Model):
     user = models.ForeignKey(to=User, verbose_name='user', related_name='favs', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, verbose_name='product', related_name='favs', on_delete=models.CASCADE)
     is_fav = models.BooleanField('is favorite', default=False)
+    
+    
+class ColorLogo(models.Model):
+    color_code = models.CharField("لون الثيم", max_length=12, help_text="ادخل اللون مثل: OxFF45B9EE")
+    image = models.ImageField("لوكو", upload_to='images/')
+    
+    def __str__(self):
+        return self.color_code
+
+    class Meta:
+        verbose_name = ' لون الثيم واللوكو' 
+        verbose_name_plural =' لون الثيم واللوكو' 
+
+    @property
+    def modify_color_code(self):
+        self.color_code = self.color_code.lstrip('#')
+        self.color_code = f"0xFF{self.color_code.upper()}"
+        return self.color_code
+    
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img = Image.open(self.image.path)
+        if img.height > 500 or img.width > 500:
+            output_size = (500, 500)
+            img.thumbnail(output_size)
+            img.save(self.image.path)

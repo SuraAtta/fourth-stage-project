@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,19 @@ AUTH_USER_MODEL = 'restauth.EmailAccount'
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#SECRET_KEY = 'django-insecure-&c!mdprw%auc!0b#$qx(yq7m--_kr2v-gy+clpp3ww(t8x_xwf'
 SECRET_KEY = 'django-insecure-&c!mdprw%auc!0b#$qx(yq7m--_kr2v-gy+clpp3ww(t8x_xwf'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['surarafe.pythonanywhere.com']
+ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1','myapp.local',"localhost","http://localhost"]
+
+'''ALLOWED_HOSTS = ['*', 
+    "http://127.0.0.1:8000", 
+    "http://127.0.0.1", 
+    "http://localhost:8000", 
+    "http://localhost"]'''
+
 
 
 # Application definition
@@ -107,9 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ar-iq'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Baghdad'
 
 USE_I18N = True
 
@@ -123,5 +131,12 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTHENTICATION_BACKENDS = ['restauth.backends.EmailBackend']
+AUTH_USER_MODEL = 'restauth.EmailAccount'

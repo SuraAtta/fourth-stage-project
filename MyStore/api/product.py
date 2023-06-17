@@ -19,7 +19,7 @@ def get_all(request):
 
 @product_router.get("/get-all-banners", response={200: List[str], 404: FourOFourOut})
 def get_all_banners(request):
-    banners = Product.objects.filter(is_featured=True).values_list('banner', flat=True)
+    banners = Product.objects.values_list('banner', flat=True)
 
     if not banners:
         return 404, {'detail': 'No banners found'}
